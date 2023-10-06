@@ -4,11 +4,11 @@ export default {
 	theme: {
 		extend: {
 			colors: {
-				primary: "#eb5e28",
+				primary: "#0AC1C1",
 				black: "#252422",
-				ash: "#403d39",
-				smudge: "#ccc5b9",
-				cream: "#fffcf2",
+				ash: "#93BFBF",
+				smudge: "#D9D9D9",
+				secondary: "#2F4C73",
 			},
 		},
 	},
