@@ -1,26 +1,36 @@
 import SidebarListElement from "./SidebarListElement";
 import Logo from "../icons/Logo";
+import {
+	SlBadge,
+	SlBookOpen,
+	SlBubbles,
+	SlLocationPin,
+	SlLogout,
+} from "react-icons/sl";
 
-const links = ["Ask", "History", "Statistics"];
+const links = ["Ask", "Statistics", "Info"];
 
 const Sidebar = () => {
 	return (
-		<div className="bg-black w-1/5 flex flex-col">
-			<div className="flex items-center justify-center gap-2 p-8">
-				<Logo color="primary" />
-				<span className="text-4xl font-medium tracking-widest text-smudge">
-					scique
-				</span>
+		<div className="w-1/5 flex flex-col justify-between divide-y divide-neutral/[0.2]">
+			<div className="flex items-center justify-center gap-2 p-4 text-2xl tracking-widest">
+				<SlBubbles className="text-primary" />
+				<span>scique</span>
 			</div>
-			<div className="flex-grow">
-				{links.map((link) => (
-					// eslint-disable-next-line react/jsx-key
-					<SidebarListElement title={link} icon={Logo} />
-				))}
+			<div className="flex flex-col flex-grow divide-y divide-neutral/[0.2]">
+				<div className="flex-grow">
+					{links.map((link) => (
+						// eslint-disable-next-line react/jsx-key
+						<SidebarListElement title={link} icon={SlBookOpen} />
+					))}
+				</div>
+				<a className="flex gap-4 items-center cursor-pointer justify-center p-3 hover:bg-primary/[0.04] hover:text-primary">
+					<div className="flex flex-grow gap-2 items-center justify-center">
+						<SlLogout />
+						<span className="">Logout</span>
+					</div>
+				</a>
 			</div>
-			<button className="bg-primary/[0.2] m-4 mx-6 p-2 font-bold tracking-wider text-primary rounded-lg hover:scale-105">
-				Sign out
-			</button>
 		</div>
 	);
 };

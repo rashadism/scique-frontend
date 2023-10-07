@@ -1,3 +1,4 @@
+import { SlPaperPlane } from "react-icons/sl";
 import Search from "../icons/Search";
 
 const options = [
@@ -9,19 +10,19 @@ const options = [
 ];
 const MainArea = () => {
 	return (
-		<div className="bg-ash p-12 flex flex-grow flex-col justify-center gap-4">
+		<div className="bg-neutral/[0.2] p-12 flex flex-grow flex-col justify-center gap-4">
 			<form className="flex">
 				<textarea
 					type="text"
 					placeholder="Enter a Science MCQ question with 5 options"
-					className="w-full rounded-l-lg bg-smudge resize-none placeholder-secondary/[0.6] text-secondary p-1 pl-4 leading-5 h-32 outline-none"
+					className="w-full rounded-l-lg bg-neutral/[0.1] resize-none placeholder-secondary/[0.4] text-secondary p-1 pl-4 leading-5 h-32 outline-none"
 					style={{
 						scrollbarWidth: "thin",
 						scrollbarColor: "#3b82f6 #d1d5db",
 					}}
 				/>
-				<button className="bg-smudge pr-2 pt-2 rounded-r-lg text-primary font-medium flex items-start">
-					<Search color="primary" />
+				<button className="bg-neutral/[0.1] py-3 px-2 rounded-r-lg text-primary flex">
+					<SlPaperPlane className="w-6 h-6" />
 				</button>
 			</form>
 			<div className="bg-smudge flex flex-col w-full h-full rounded-lg p-6">

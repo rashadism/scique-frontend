@@ -5,10 +5,13 @@ export default {
 		extend: {
 			colors: {
 				primary: "#0AC1C1",
-				black: "#252422",
-				ash: "#93BFBF",
-				smudge: "#D9D9D9",
-				secondary: "#2F4C73",
+				secondary: "#252422",
+				accent: "#93BFBF",
+				neutral: "#8EB1D9",
+				base: "#2F4C73",
+			},
+			fontFamily: {
+				display: ["Inter"],
 			},
 		},
 	},
