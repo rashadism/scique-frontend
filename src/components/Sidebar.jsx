@@ -1,14 +1,18 @@
 import SidebarListElement from "./SidebarListElement";
-import Logo from "../icons/Logo";
 import {
-	SlBadge,
 	SlBookOpen,
 	SlBubbles,
-	SlLocationPin,
+	SlGraph,
 	SlLogout,
+	SlQuestion,
+	SlRocket,
 } from "react-icons/sl";
 
-const links = ["Ask", "Statistics", "Info"];
+const links = [
+	{ title: "Ask", icon: SlRocket },
+	{ title: "Statistics", icon: SlGraph },
+	{ title: "Info", icon: SlQuestion },
+];
 
 const Sidebar = () => {
 	return (
@@ -21,7 +25,10 @@ const Sidebar = () => {
 				<div className="flex-grow">
 					{links.map((link) => (
 						// eslint-disable-next-line react/jsx-key
-						<SidebarListElement title={link} icon={SlBookOpen} />
+						<SidebarListElement
+							title={link.title}
+							icon={link.icon}
+						/>
 					))}
 				</div>
 				<a className="flex gap-4 items-center cursor-pointer justify-center p-3 hover:bg-primary/[0.04] hover:text-primary">
