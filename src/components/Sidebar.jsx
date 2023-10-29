@@ -1,6 +1,5 @@
 import SidebarListElement from "./SidebarListElement";
 import {
-	SlBookOpen,
 	SlBubbles,
 	SlGraph,
 	SlLogout,
@@ -16,7 +15,7 @@ const links = [
 
 const Sidebar = () => {
 	return (
-		<div className="w-1/5 flex flex-col justify-between divide-y divide-neutral/[0.2]">
+		<div className="max-w-[20%] min-w-[20%] flex flex-col justify-between divide-y divide-neutral/[0.2]">
 			<div className="flex items-center justify-center gap-2 p-4 text-2xl tracking-widest">
 				<SlBubbles className="text-primary" />
 				<span>scique</span>

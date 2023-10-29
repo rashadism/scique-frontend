@@ -1,47 +1,93 @@
-import { SlPaperPlane } from "react-icons/sl";
-import Search from "../icons/Search";
+import { useState } from "react";
+import { SlArrowRight, SlPlus } from "react-icons/sl";
+import { AiOutlinePlus, AiOutlineMinus } from "react-icons/ai";
 
-const options = [
-	"Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nesciunt, hic iusto dolorum placeat maiores libero!",
-	"Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nesciunt, hic iusto dolorum placeat maiores libero!",
-	"Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nesciunt, hic iusto dolorum placeat maiores libero!",
-	"Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nesciunt, hic iusto dolorum placeat maiores libero!",
-	"Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nesciunt, hic iusto dolorum placeat maiores libero!",
-];
 const MainArea = () => {
+	const [options, setOptions] = useState([]);
+	const [question, setQuestion] = useState("");
+	const [option, setOption] = useState("");
+	const [questionMode, setQuestionMode] = useState(true);
+
+	const handleInput = () => {
+		if (questionMode) {
+			if (question) {
+				setQuestionMode(false);
+			}
+		} else {
+			if (option && options.length < 5) {
+				console.log("option");
+				setOptions([...options, option]);
+				setOption("");
+				console.log(option);
+			}
+		}
+	};
+
 	return (
-		<div className="bg-neutral/[0.2] p-12 flex flex-grow flex-col justify-center gap-4">
-			<form className="flex">
-				<textarea
-					type="text"
-					placeholder="Enter a Science MCQ question with 5 options"
-					className="w-full rounded-l-lg bg-neutral/[0.1] resize-none placeholder-secondary/[0.4] text-secondary p-1 pl-4 leading-5 h-32 outline-none"
-					style={{
-						scrollbarWidth: "thin",
-						scrollbarColor: "#3b82f6 #d1d5db",
-					}}
-				/>
-				<button className="bg-neutral/[0.1] py-3 px-2 rounded-r-lg text-primary flex">
-					<SlPaperPlane className="w-6 h-6" />
-				</button>
-			</form>
-			<div className="bg-smudge flex flex-col w-full h-full rounded-lg p-6">
-				<div>
-					<div className="h-10 font-semibold text-xl">
-						Lorem ipsum dolor sit amet consectetur adipisicing elit.
-						Sit eum porro similique hic est eius aut dolorem ullam
-						architecto quisquam?
+		<div className="bg-neutral/[0.2] px-24 py-24 flex flex-grow flex-col justify-start gap-4 max-h-screen overflow-auto">
+			<div className="flex flex-col gap-4">
+				{questionMode && (
+					<div className="flex flex-col">
+						<div className="">Enter a Science MCQ question</div>
+
+						<div className="flex shadow">
+							<button
+								className="hover:text-primary p-4 hover:bg-primary/[0.04]"
+								onClick={handleInput}
+							>
+								<SlArrowRight />
+							</button>
+							<textarea
+								type="text"
+								className="w-full h-12 leading-4 outline-primary/[0.4] pl-4 py-2 resize-none"
+								value={question}
+								onChange={(e) => setQuestion(e.target.value)}
+							/>
+						</div>
 					</div>
-					<div className="flex flex-col p-6">
+				)}
+				{!questionMode && (
+					<div className="flex flex-col">
+						<div className="">Add option</div>
+
+						<div className="flex shadow">
+							<button
+								className="hover:text-primary p-4 hover:bg-primary/[0.04]"
+								onClick={handleInput}
+							>
+								<AiOutlinePlus />
+							</button>
+							<input
+								type="text"
+								className="w-full h-12 leading-4 outline-primary/[0.4] pl-4 py-2 resize-none"
+								value={option}
+								onChange={(e) => setOption(e.target.value)}
+							/>
+						</div>
+					</div>
+				)}
+				<div className="">
+					{!questionMode && (
+						<div className="font-medium text-xl">{question}</div>
+					)}
+					<div className="flex flex-col gap-4">
 						{options.map((option, idx) => (
-							<div className="flex gap-2 items-center" key={idx}>
-								<div className="flex p-4 rounded-lg bg-ash font-bold">
-									{idx + 1}
-								</div>
-								<div
-									key={idx}
-									className="flex bg-ash text-center my-2 p-4 rounded-lg flex-grow"
-								>
+							<div
+								key={option}
+								className="flex flex-grow items-center"
+							>
+								<div className="flex flex-grow text-lg items-center shadow min-h-[64px] hover:shadow-md">
+									<div
+										className="flex justify-center h-full py-4 px-4 ml-2 mr-4 cursor-pointer hover:bg-secondary"
+										onClick={() => {
+											const newOptions = options.filter(
+												(opt) => opt !== option
+											);
+											setOptions(newOptions);
+										}}
+									>
+										<AiOutlineMinus />
+									</div>
 									{option}
 								</div>
 							</div>
