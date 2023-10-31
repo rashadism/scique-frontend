@@ -2,7 +2,7 @@ import SidebarListElement from "./SidebarListElement";
 import { SlEnergy, SlGraph, SlHome, SlRocket } from "react-icons/sl";
 
 const links = [
-	{ title: "Home", icon: SlHome },
+	// { title: "Home", icon: SlHome },
 	{ title: "Ask", icon: SlRocket },
 	{ title: "History", icon: SlGraph },
 ];
@@ -19,6 +19,7 @@ const Sidebar = () => {
 					{links.map((link) => (
 						// eslint-disable-next-line react/jsx-key
 						<SidebarListElement
+							key={link.title}
 							title={link.title}
 							icon={link.icon}
 						/>

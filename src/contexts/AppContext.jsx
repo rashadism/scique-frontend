@@ -4,7 +4,7 @@ const AppContext = createContext(null);
 
 // eslint-disable-next-line react/prop-types
 export const AppContextProvider = ({ children }) => {
-	const [section, setSection] = useState("Home");
+	const [section, setSection] = useState("Ask");
 	return (
 		<AppContext.Provider value={{ section, setSection }}>
 			{children}

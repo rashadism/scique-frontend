@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { AiOutlinePlus, AiOutlineClose, AiOutlineRight } from "react-icons/ai";
+import { AiOutlinePlus, AiOutlineRight } from "react-icons/ai";
 import axios from "axios";
+import Option from "./Option";
 
 const sample = {
 	prompt: "What is Hesse's principle of transfer in geometry?",
@@ -17,7 +18,9 @@ const MainArea = () => {
 	const [question, setQuestion] = useState("");
 	const [option, setOption] = useState("");
 	const [loading, setLoading] = useState(false);
+	const [context, setContext] = useState("");
 	const [questionMode, setQuestionMode] = useState(true);
+	const [answer, setAnswer] = useState();
 
 	const demo = () => {
 		setQuestion(sample.prompt);
@@ -29,9 +32,11 @@ const MainArea = () => {
 		setLoading(true);
 		try {
 			const response = await axios.post(
-				"https://hardy-lasting-ghost.ngrok-free.app/predict",
+				`https://hardy-lasting-ghost.ngrok-free.app/predict?context=${
+					context ? true : false
+				}`,
 				{
-					prompt: question,
+					prompt: `${context ? `context\n####\n` : ""}${question}`,
 					options: {
 						A: options.at(0),
 						B: options.at(1),
@@ -46,8 +51,11 @@ const MainArea = () => {
 					},
 				}
 			);
-			alert(response.data.answer_order);
-			console.log(response.data);
+			if (response.data) {
+				// alert(response.data.answer_order);
+				// console.log(response.data);
+				setAnswer(response.data);
+			}
 		} catch (error) {
 			console.log("Error fetching data:", error);
 		} finally {
@@ -73,96 +81,136 @@ const MainArea = () => {
 	return (
 		<div className="bg-neutral/[0.2] px-24 py-16 flex flex-grow flex-col justify-start gap-4 max-h-screen overflow-auto">
 			<div className="flex flex-col gap-4">
-				<div className="flex justify-between items-center px-6">
-					<div className="text-xl">
-						{questionMode
-							? "Enter a Science MCQ question"
-							: options.length < 5
-							? `Enter option`
-							: options.length === 5
-							? "Enter context (Optional)"
-							: ""}
-					</div>
-					<div className="flex gap-6">
-						<button
-							className="px-6 py-1 rounded-full border-2 border-primary hover:bg-primary hover:text-white hover:border-transparent"
-							onClick={demo}
-						>
-							Demo
-						</button>
-						<button
-							className="bg-primary px-6 py-1 rounded-full text-white border-2 border-transparent hover:bg-transparent hover:text-black hover:border-primary disabled:bg-primary/[0.2] disabled:text-white disabled:border-none disabled:cursor-not-allowed"
-							disabled={options.length !== 5}
-							onClick={proceed}
-						>
-							Proceed
-						</button>
-					</div>
-				</div>
-				{questionMode && (
-					<div className="flex flex-col">
-						<div className="flex shadow">
+				{!answer?.predictions ? (
+					<>
+						<div className="flex justify-between items-center px-6">
+							<div className="text-xl">
+								{questionMode
+									? "Enter a Science MCQ question"
+									: options.length < 5
+									? `Enter option`
+									: options.length === 5
+									? "Enter context (Optional)"
+									: ""}
+							</div>
+							<div className="flex gap-4 font-medium">
+								<button
+									className="px-6 py-1 rounded-full border-2 text-primary border-primary hover:bg-primary hover:text-white hover:border-transparent"
+									onClick={demo}
+								>
+									Demo
+								</button>
+								<button
+									className="bg-primary px-6 py-1 rounded-full text-white border-2 border-transparent hover:bg-transparent hover:text-primary hover:border-primary disabled:bg-primary/[0.2] disabled:text-white disabled:border-none disabled:cursor-not-allowed"
+									disabled={options.length !== 5 || loading}
+									onClick={proceed}
+								>
+									Proceed
+								</button>
+							</div>
+						</div>
+
+						<div className="flex flex-col">
+							<div className="flex shadow">
+								<button
+									className="hover:text-primary p-4 hover:bg-primary/[0.04]"
+									onClick={handleInput}
+								>
+									{questionMode ? (
+										<AiOutlineRight />
+									) : (
+										<AiOutlinePlus />
+									)}
+								</button>
+								<textarea
+									type="text"
+									className="w-full h-12 leading-4 outline-primary/[0.4] pl-4 py-2 resize-none"
+									value={questionMode ? question : option}
+									onChange={(e) => {
+										if (questionMode) {
+											setQuestion(e.target.value);
+										} else setOption(e.target.value);
+									}}
+									onKeyDown={(e) => {
+										if (e.key === "Enter") {
+											if (!questionMode) {
+												handleInput();
+											}
+										}
+									}}
+								/>
+							</div>
+						</div>
+					</>
+				) : (
+					<div className="flex gap-12 justify-center">
+						{["A", "B", "C", "D", "E"].map((_) => {
+							return (
+								<div
+									key={_}
+									className={
+										"flex flex-col h-24 w-24 bg-red-400 items-center justify-center rounded-lg" +
+										(answer?.answer_order.at(0) === _
+											? " bg-success/[0.8]"
+											: "")
+									}
+								>
+									<div className="text-2xl text-white">
+										{_}
+									</div>
+									{`${(answer.predictions[_] * 100).toFixed(
+										2
+									)}%`}
+								</div>
+							);
+						})}
+						<div className="flex flex-col gap-4 font-medium justify-center">
 							<button
-								className="hover:text-primary p-4 hover:bg-primary/[0.04]"
-								onClick={handleInput}
+								className="bg-primary px-6 py-1 rounded-full text-white border-2 border-transparent hover:bg-transparent hover:text-primary hover:border-primary disabled:bg-primary/[0.2] disabled:text-white disabled:border-none disabled:cursor-not-allowed"
+								disabled={options.length !== 5 || loading}
+								onClick={() => {
+									setAnswer("");
+									setQuestion("");
+									setOption("");
+									setOptions([]);
+									setQuestionMode(true);
+								}}
 							>
-								<AiOutlineRight />
+								New
 							</button>
-							<textarea
-								type="text"
-								className="w-full h-12 leading-4 outline-primary/[0.4] pl-4 py-2 resize-none"
-								value={question}
-								onChange={(e) => setQuestion(e.target.value)}
-							/>
+							<button
+								className="bg-primary px-6 py-1 rounded-full text-white border-2 border-transparent hover:bg-transparent hover:text-primary hover:border-primary disabled:bg-primary/[0.2] disabled:text-white disabled:border-none disabled:cursor-not-allowed"
+								disabled={options.length !== 5 || loading}
+								onClick={proceed}
+							>
+								Reprompt
+							</button>
 						</div>
 					</div>
 				)}
-				{!questionMode && (
-					<div className="flex flex-col">
-						<div className="flex shadow">
-							<button
-								className="hover:text-primary p-4 hover:bg-primary/[0.04]"
-								onClick={handleInput}
-							>
-								<AiOutlinePlus />
-							</button>
-							<input
-								type="text"
-								className="w-full h-12 leading-4 outline-primary/[0.4] pl-4 py-2 resize-none"
-								value={option}
-								onChange={(e) => setOption(e.target.value)}
-							/>
-						</div>
-					</div>
-				)}
-				<div className="">
+				<div className="flex flex-col">
 					{!questionMode && (
 						<div className="font-medium text-xl px-6 py-2 pb-4">
 							{question}
 						</div>
 					)}
-					<div className="flex flex-col gap-4">
-						{options.map((option, idx) => (
-							<div
-								key={option}
-								className="flex flex-grow items-center hover:text-primary hover:bg-primary/[0.04]"
-							>
-								<div className="flex flex-grow text-lg items-center shadow min-h-[64px] hover:shadow-md">
-									<div
-										className="flex justify-center h-full py-4 px-4 ml-2 mr-4 cursor-pointer hover:bg-secondary"
-										onClick={() => {
-											const newOptions = options.filter(
-												(opt) => opt !== option
-											);
-											setOptions(newOptions);
-										}}
-									>
-										<AiOutlineClose />
-									</div>
-									<div className="text-black">{option}</div>
-								</div>
+					<div className="flex flex-grow flex-col gap-4">
+						{!loading ? (
+							options.map((option, idx) => (
+								<Option
+									key={option}
+									option={option}
+									idx={idx}
+									options={options}
+									setOptions={setOptions}
+									answer={answer}
+								/>
+							))
+						) : (
+							<div className="flex flex-grow items-center justify-center pt-60">
+								Loading...
 							</div>
-						))}
+						)}
 					</div>
 				</div>
 			</div>
